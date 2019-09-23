@@ -123,3 +123,9 @@ def edit_account(request, id, method='POST'):
         print("updated email")
     update_user.save()
     return redirect('/wall')
+
+
+def delete(request, id):
+    deleter = Quote.objects.get(id=id)
+    deleter.delete()
+    return redirect('/wall')

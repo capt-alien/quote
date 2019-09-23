@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^user/edit/(?P<id>\d+)$', views.edit_to_account),
     url(r'^user/editing/(?P<id>\d+)$', views.edit_account),
     url(r'^logout$', views.logout),
+    url(r'^quote/delete/(?P<id>\d+)$', views.delete)
+
 
 ]
