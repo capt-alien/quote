@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from apps.quote.models import *
 import bcrypt
+import re
 
 
 # Create your views here.
@@ -14,6 +15,13 @@ def regester(request, method='POST'):
     email = request.POST["email"]
     psw = request.POST["psw"]
     psw2 = request.POST["psw-repeat"]
+    # Validations
+    if len(first_name) < 2 or len(last_name) <2:
+        return HttpResponse("First or last name must be more than 2 charictors ")
+
+    if not re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email):
+        return HttpResponse("Please enter a valid email adress!")
+
     if psw != psw2:
         return HttpResponse("Passwords do Not match")
     salt = bcrypt.gensalt()
@@ -97,8 +105,12 @@ def edit_to_account(request, id):
 
 def edit_account(request, id, method='POST'):
     update_user = User.objects.get(id=id)
-    print("*"*50)
-    print(update_user.first_name)
+
+    if len(request.POST['first_name']) < 2 or len(request.POST['last_name']) <2:
+        return HttpResponse("First or last name must be more than 2 charictors ")
+
+    if not re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", request.POST['email']):
+        return HttpResponse("Please enter a valid email adress!")
 
     if request.POST['first_name'] != update_user.first_name:
         update_user.first_name = request.POST['first_name']
