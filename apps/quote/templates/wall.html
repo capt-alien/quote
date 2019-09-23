@@ -29,7 +29,7 @@
         <fieldset>
             <!-- this is where you put in the user link href -->
             <h3>{{ post.author }}</h3>
-            <p>{{ post.quote }}</p>
+            <p>"{{ post.quote }}"</p>
             <a href='wall/{{post.user.id}}'><p>{{ post.user.first_name }}</p></a>
         </fieldset>
         {% endfor %}

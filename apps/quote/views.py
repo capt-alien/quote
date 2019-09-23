@@ -65,21 +65,49 @@ def add_quote(request, method='POST'):
     return redirect('/wall')
 
 def user_posts(request, id):
-    user= User.objects.get(id=id)
-    quotes = Quote.objects.filter(user=id)
-    print("*"*50)
-    for quote in quotes:
-        print(quote.quote)
-    context = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'quotes':quotes
-                }
-    return render(request, 'u_quotes.html', context)
+    if 'userid' in request.session.keys():
+
+        user= User.objects.get(id=id)
+        quotes = Quote.objects.filter(user=id)
+        print("*"*50)
+        for quote in quotes:
+            print(quote.quote)
+        context = {
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'quotes':quotes
+                    }
+        return render(request, 'u_quotes.html', context)
+    return HttpResponse("Error: you must be signed in to access this content")
+
 
 # Edit account
 def edit_to_account(request, id):
-    return HttpResponse("page under construction")
+    if 'userid' in request.session.keys():
+
+        user= User.objects.get(id=id)
+        context = {
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'email':user.email
+                    }
+        return render(request, 'update.html', context)
+    return HttpResponse("Error: you must be signed in to access this content")
+
 
 def edit_account(request, id, method='POST'):
-    pass
+    update_user = User.objects.get(id=id)
+    print("*"*50)
+    print(update_user.first_name)
+
+    if request.POST['first_name'] != update_user.first_name:
+        update_user.first_name = request.POST['first_name']
+        print("Updated first Name")
+    if request.POST['last_name'] != update_user.last_name:
+        update_user.last_name = request.POST['last_name']
+        print("updated last_name")
+    if request.POST['email'] != update_user.email:
+        update_user.email = request.POST['email']
+        print("updated email")
+    update_user.save()
+    return redirect('/wall')
