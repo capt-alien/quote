@@ -17,13 +17,17 @@ def regester(request, method='POST'):
     psw2 = request.POST["psw-repeat"]
     # Validations
     if len(first_name) < 2 or len(last_name) <2:
-        return HttpResponse("First or last name must be more than 2 charictors ")
+        context = {'message':"First or last name must be more than 2 charictors "}
+        return render(request, 'index.html', context)
 
     if not re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email):
-        return HttpResponse("Please enter a valid email adress!")
+        context = {'message':"Please enter a valid email adress!"}
+        return render(request, 'index.html', context)
 
     if psw != psw2:
-        return HttpResponse("Passwords do Not match")
+        context = {'message':"Please make sure passwords match"}
+        return render(request, 'index.html', context)
+
     salt = bcrypt.gensalt()
     hashed_pwd = bcrypt.hashpw(psw.encode('utf8'), salt)
     hashed_pwd = hashed_pwd.decode('utf8')
@@ -45,7 +49,9 @@ def login(request, method='POST'):
         if bcrypt.checkpw(request.POST['l_psw'].encode(), logged_user.hashed_pwd.encode()):
             request.session['userid'] = logged_user.id
             return redirect('/wall')
-    return HttpResponse("Loggin and/or Password do not match any user")
+
+    context = {'message':"Loggin and/or Password do not match any user"}
+    return render(request, 'index.html', context)
 
 def logout(request, method='POST'):
     try:
@@ -66,9 +72,20 @@ def wall(request):
 
 
 def add_quote(request, method='POST'):
+
+    author=request.POST['author']
+    if len(author) < 2:
+        context = {'message': "Author's name must be at least 3 charictors"}
+        return render(request, 'wall.html', context)
+
+    quote=request.POST['add_quote']
+    if len(quote) < 5:
+        context = {'message': "Quote must be at least 5 charictors"}
+        return render(request, 'wall.html', context)
+
     Quote.objects.create(user=User.objects.get(id=request.session['userid']),
-                        author=request.POST['author'],
-                        quote=request.POST['add_quote']
+                        author=author,
+                        quote=quote
                             )
     return redirect('/wall')
 
@@ -107,10 +124,12 @@ def edit_account(request, id, method='POST'):
     update_user = User.objects.get(id=id)
 
     if len(request.POST['first_name']) < 2 or len(request.POST['last_name']) <2:
-        return HttpResponse("First or last name must be more than 2 charictors ")
+        context = {'message':"First or last name must be more than 2 charictors "}
+        return render(request, 'update.html', context)
 
     if not re.match("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", request.POST['email']):
-        return HttpResponse("Please enter a valid email adress!")
+        context = {'message':"Please enter a valid email adress!"}
+        return render(request, 'update.html', context)
 
     if request.POST['first_name'] != update_user.first_name:
         update_user.first_name = request.POST['first_name']
