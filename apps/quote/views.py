@@ -36,9 +36,7 @@ def login(request, method='POST'):
         print(logged_user.first_name)
         if bcrypt.checkpw(request.POST['l_psw'].encode(), logged_user.hashed_pwd.encode()):
             request.session['userid'] = logged_user.id
-            print("*"*50)
-            print("user loggdin")
-            return HttpResponse("user loggedin")
+            return redirect('/wall')
     return HttpResponse("Loggin and/or Password do not match any user")
 
 
@@ -46,9 +44,16 @@ def wall(request):
     if 'userid' in request.session.keys():
         context = {
                     'user':User.objects.get(id=request.session['userid']),
-                    'post_data': quote.objects.all(),
-                    'comment_data': Comments.objects.all()
+                    'post_data': Quote.objects.all()
                     }
-        print(Comments.objects.all())
         return render(request, 'wall.html', context)
+        # return render(request, 'wall.html')
     return HttpResponse("Error: you must be signed in to access this content")
+
+
+def add_quote(request, method='POST'):
+    Quote.objects.create(user=User.objects.get(id=request.session['userid']),
+                        author=request.POST['author'],
+                        quote=request.POST['add_quote']
+                            )
+    return redirect('/wall')

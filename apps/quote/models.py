@@ -14,5 +14,4 @@ class Quote(models.Model):
     author = models.CharField(max_length=100)
     quote = models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(blank=True, default=0)
