@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wall of Quotes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <!-- HEAD -->
+    <div class='header'>
+        <h3>Quotes for {{first_name}} {{ last_name}}</h3>
+
+        <div id='innerHeadder'>
+        <a href="/wall" >Back</a>
+        <!-- Loggout functionalithy -->
+        <form action="/logout">
+            {% csrf_token %}
+            <input type="submit" value="Logout">
+        </form>
+        </div>
+    </div>
+
+
+    <!-- quote boxes -->
+    <div id=quoteholder>
+        <h2>Quotes:</h2>
+        {% if quotes %}
+        {% for quote in quotes %}
+        <fieldset>
+            <p>{{ quote.quote }}</p>
+        </fieldset>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+
+</body>
+</html>

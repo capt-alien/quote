@@ -2,42 +2,52 @@
 <html>
 <head>
     <title>Wall of Quotes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
-    <h3>Welcome {{ user.first_name }} {{user.last_name}}</h3>
-    <!-- <p>Your user id: {{ request.session.userid }}</p>
-    <p>User_First Name: {{ user.first_name }}</p>
-    <p>User_Last Name: {{ user.last_name }}</p>
-    <p>User_Email: {{ user.email }}</p> -->
+    <!-- HEAD -->
+    <div class='header'>
+        <h3>Welcome {{ user.first_name }} {{user.last_name}}</h3>
 
-    <form action="/add_quote" method="POST">
-        {% csrf_token %}
+        <div id='innerHeadder'>
+        <a href="/user/edit/{{request.session.userid}}" >Edit my Account</a>
+        <!-- Loggout functionalithy -->
+        <form action="/logout">
+            {% csrf_token %}
+            <input type="submit" value="Logout">
+        </form>
+        </div>
+    </div>
 
-        <label for="authoe"><b>Author:</b></label>
-        <input type="text" placeholder="Churchill" name="author" required>
 
-        <textarea name="add_quote" id="quote" cols="100" rows="10" placeholder="Post a quote"></textarea>
-        <input type="submit" value="Post Quote" >
-    </form>
-
-    <h2>Quotes:</h2>
-    {% if post_data %}
-      {% for post in post_data %}
-      <fieldset>
-              <!-- this is where you put in the user link href -->
+    <!-- quote boxes -->
+    <div id=quoteholder>
+        <h2>Quotes:</h2>
+        {% if post_data %}
+        {% for post in post_data %}
+        <fieldset>
+            <!-- this is where you put in the user link href -->
             <h3>{{ post.author }}</h3>
             <p>{{ post.quote }}</p>
-            <p>{{ post.user.first_name }}</p>
-
-
+            <a href='wall/{{post.user.id}}'><p>{{ post.user.first_name }}</p></a>
         </fieldset>
         {% endfor %}
-    {% endif %}
+        {% endif %}
+    </div>
 
-    <!-- Loggout functionalithy -->
-    <form action="/logout">
-    {% csrf_token %}
-    <input type="submit" value="Logout">
-    </form>
+    <!-- NEW QUOTE -->
+    <div id=newQuote>
+        <form action="/add_quote" method="POST">
+            {% csrf_token %}
+
+            <label for="author"><b>Author:</b></label>
+            <input type="text" placeholder="Churchill" name="author" required>
+
+            <textarea name="add_quote" id="quote" cols="100" rows="10" placeholder="Post a quote"></textarea>
+            <input type="submit" value="Post Quote" >
+        </form>
+    </div>
+
 </body>
 </html>

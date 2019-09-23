@@ -1,5 +1,5 @@
-* {box-sizing: border-box;
-    outline: 0px dotted red;
+.*{box-sizing: border-box;
+    outline: 1px dotted red;
 }
 
 /* Add padding to containers */
@@ -64,4 +64,32 @@ a {
     height: auto;
     display: inline-block;
     margin: 30px
+}
+
+/* Wall styles */
+.header{
+    height: 100px;
+    width: auto;
+    padding: 20px;
+}
+#innerHeadder{
+    float: right;
+    padding:20px;
+    display: inline-block;
+
+}
+
+#quoteholder{
+    width: 400px;
+    height: auto;
+    padding:30px;
+    display: inline-block;
+}
+#newQuote{
+    margin-left: 100px;
+    margin-top:30px;
+    width: 300px;
+    height: auto;
+    padding:30px;
+    display: inline-block;
 }

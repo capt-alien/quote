@@ -39,6 +39,12 @@ def login(request, method='POST'):
             return redirect('/wall')
     return HttpResponse("Loggin and/or Password do not match any user")
 
+def logout(request, method='POST'):
+    try:
+        del request.session['userid']
+    except KeyError:
+        pass
+    return redirect('/')
 
 def wall(request):
     if 'userid' in request.session.keys():
@@ -57,3 +63,23 @@ def add_quote(request, method='POST'):
                         quote=request.POST['add_quote']
                             )
     return redirect('/wall')
+
+def user_posts(request, id):
+    user= User.objects.get(id=id)
+    quotes = Quote.objects.filter(user=id)
+    print("*"*50)
+    for quote in quotes:
+        print(quote.quote)
+    context = {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'quotes':quotes
+                }
+    return render(request, 'u_quotes.html', context)
+
+# Edit account
+def edit_to_account(request, id):
+    return HttpResponse("page under construction")
+
+def edit_account(request, id, method='POST'):
+    pass
